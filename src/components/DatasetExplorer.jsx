@@ -821,9 +821,7 @@ export default function DatasetExplorer({
                       </div>
                     </div>
                   </div>
-                </>
-              )}
-            </div>
+                </div>
           )}
         </div>
       )}
