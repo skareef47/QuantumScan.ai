@@ -144,48 +144,8 @@ export const BRAIN_DATASET_IMAGES = {
   ]
 };
 
-export const LIVER_DATASET_VOLUMES = [
-  'volume-7.nii',
-  'volume-8.nii',
-  'volume-9.nii',
-  'volume-10.nii'
-];
-
-export const LIVER_DATASET_SEGMENTATIONS = [
-  'segmentation-7.nii',
-  'segmentation-8.nii',
-  'segmentation-9.nii',
-  'segmentation-10.nii'
-];
-
-export const LIVER_DATASET_FILES = {
-  'Volume': LIVER_DATASET_VOLUMES,
-  'Segmentation': LIVER_DATASET_SEGMENTATIONS
-};
 
 export const DATASET_STRUCTURE = [
-  {
-    id: 'liver',
-    name: 'Liver',
-    cancerType: 'liver',
-    engineName: 'Liver CT Engine',
-    modelName: '2D U-Net Volumetric Segmentor',
-    modelFile: 'liver_unet_tumor_best.pt',
-    color: '#F4C96B',
-    subfolders: [
-      {
-        id: 'liver_volume',
-        name: 'Volume',
-        files: LIVER_DATASET_FILES['Volume']
-      },
-      {
-        id: 'liver_segmentation',
-        name: 'Segmentation',
-        files: LIVER_DATASET_FILES['Segmentation']
-      }
-    ],
-    subclasses: ['Volume', 'Segmentation']
-  },
   {
     id: 'breast',
     name: 'Breast',
@@ -292,17 +252,16 @@ export default function DatasetExplorer({
   className = '',
   style = {}
 }) {
-  // Root folder and 5 cancer categories expand/collapse state
+  // Root folder and 4 cancer categories expand/collapse state
   const [isRootOpen, setIsRootOpen] = useState(true);
   const [openFolders, setOpenFolders] = useState({
-    liver: true,
+    breast: true,
     brain: true,
     lung: true,
-    kidney: true,
-    breast: true
+    kidney: true
   });
 
-  // Expand/collapse states for category subfolders (Lung, Breast, Brain, and Liver)
+  // Expand/collapse states for category subfolders (Lung, Breast, and Brain)
   const [openSubfolders, setOpenSubfolders] = useState({
     'bengin_cases': true,
     'malignant_cases': true,
@@ -313,9 +272,7 @@ export default function DatasetExplorer({
     'brain_glioma': true,
     'brain_meningioma': true,
     'brain_notumor': true,
-    'brain_pituitary': true,
-    'liver_volume': true,
-    'liver_segmentation': true
+    'brain_pituitary': true
   });
 
   // Health and real model status
@@ -832,51 +789,15 @@ export default function DatasetExplorer({
             {currentFolderConfig.modelName}
           </div>
 
-          {selectedImage && (selectedCancerType === 'lung' || selectedCancerType === 'breast' || selectedCancerType === 'brain' || selectedCancerType === 'liver') && (
+          {selectedImage && (selectedCancerType === 'lung' || selectedCancerType === 'breast' || selectedCancerType === 'brain') && (
             <div style={{
               marginTop: '0.45rem',
               paddingTop: '0.45rem',
               borderTop: '1px solid rgba(255, 255, 255, 0.08)'
             }}>
-              {selectedCancerType === 'liver' ? (
-                <div>
-                  <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginBottom: '0.3rem', fontWeight: 600 }}>
-                    {selectedSubclass === 'Volume' ? 'Selected LiTS Volume Scan:' : 'Selected LiTS Segmentation Mask:'}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                    <div style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '6px',
-                      backgroundColor: 'rgba(244, 201, 107, 0.15)',
-                      border: '1px solid rgba(244, 201, 107, 0.35)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <Layers size={18} color="#F4C96B" />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '0.74rem', color: '#fff', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {selectedImage}
-                      </div>
-                      <div style={{ fontSize: '0.65rem', color: '#F4C96B', fontWeight: 600 }}>
-                        {selectedSubclass === 'Volume' ? 'LiTS Benchmark Authentic 3D Volume' : 'LiTS Benchmark Ground Truth 3D Mask'}
-                      </div>
-                      <div style={{ fontSize: '0.625rem', color: '#94a3b8', marginTop: '2px', fontWeight: 500 }}>
-                        {selectedSubclass === 'Volume'
-                          ? `Paired Mask: ${selectedImage.replace('volume-', 'segmentation-')}`
-                          : `Paired Volume: ${selectedImage.replace('segmentation-', 'volume-')}`}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginBottom: '0.3rem', fontWeight: 600 }}>
-                    {selectedCancerType === 'breast' ? 'Selected Ultrasound Scan File:' : selectedCancerType === 'brain' ? 'Selected Brain MRI Scan File:' : 'Selected CT Scan File:'}
-                  </div>
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginBottom: '0.3rem', fontWeight: 600 }}>
+                {selectedCancerType === 'breast' ? 'Selected Ultrasound Scan File:' : selectedCancerType === 'brain' ? 'Selected Brain MRI Scan File:' : 'Selected CT Scan File:'}
+              </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <img 
                       src={`/datasets/${currentFolderConfig.name}/${selectedSubclass}/${selectedImage}.${selectedCancerType === 'breast' ? 'png' : 'jpg'}`} 
